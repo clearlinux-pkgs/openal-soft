@@ -4,7 +4,7 @@
 #
 Name     : openal-soft
 Version  : 1.17.2
-Release  : 11
+Release  : 12
 URL      : http://www.openal-soft.org/openal-releases/openal-soft-1.17.2.tar.bz2
 Source0  : http://www.openal-soft.org/openal-releases/openal-soft-1.17.2.tar.bz2
 Summary  : OpenAL is a cross-platform 3D audio API
@@ -65,10 +65,11 @@ lib components for the openal-soft package.
 %setup -q -n openal-soft-1.17.2
 
 %build
+export LANG=C
 mkdir clr-build
 pushd clr-build
-cmake .. -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS:BOOL=ON -DLIB_INSTALL_DIR:PATH=%{_libdir} -DLIB_SUFFIX=64
-make V=1  %{?_smp_mflags}
+cmake .. -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS:BOOL=ON -DLIB_INSTALL_DIR:PATH=%{_libdir} -DCMAKE_AR=/usr/bin/gcc-ar -DCMAKE_RANLIB=/usr/bin/gcc-ranlib -DLIB_SUFFIX=64
+make VERBOSE=1  %{?_smp_mflags}
 popd
 
 %install
@@ -101,9 +102,10 @@ popd
 /usr/include/AL/efx-creative.h
 /usr/include/AL/efx-presets.h
 /usr/include/AL/efx.h
-/usr/lib64/*.so
-/usr/lib64/pkgconfig/*.pc
+/usr/lib64/libopenal.so
+/usr/lib64/pkgconfig/openal.pc
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/*.so.*
+/usr/lib64/libopenal.so.1
+/usr/lib64/libopenal.so.1.17.2
