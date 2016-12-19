@@ -4,7 +4,7 @@
 #
 Name     : openal-soft
 Version  : 1.17.2
-Release  : 13
+Release  : 14
 URL      : http://www.openal-soft.org/openal-releases/openal-soft-1.17.2.tar.bz2
 Source0  : http://www.openal-soft.org/openal-releases/openal-soft-1.17.2.tar.bz2
 Summary  : OpenAL is a cross-platform 3D audio API
@@ -24,6 +24,7 @@ BuildRequires : glibc-libc32
 BuildRequires : pkgconfig(32libpulse)
 BuildRequires : pkgconfig(libpulse)
 BuildRequires : pulseaudio-dev
+BuildRequires : pulseaudio-dev32
 
 %description
 Source Install
@@ -60,6 +61,18 @@ Provides: openal-soft-devel
 dev components for the openal-soft package.
 
 
+%package dev32
+Summary: dev32 components for the openal-soft package.
+Group: Default
+Requires: openal-soft-lib32
+Requires: openal-soft-bin
+Requires: openal-soft-data
+Requires: openal-soft-dev
+
+%description dev32
+dev32 components for the openal-soft package.
+
+
 %package lib
 Summary: lib components for the openal-soft package.
 Group: Libraries
@@ -67,6 +80,15 @@ Requires: openal-soft-data
 
 %description lib
 lib components for the openal-soft package.
+
+
+%package lib32
+Summary: lib32 components for the openal-soft package.
+Group: Default
+Requires: openal-soft-data
+
+%description lib32
+lib32 components for the openal-soft package.
 
 
 %prep
@@ -79,7 +101,7 @@ popd
 export LANG=C
 mkdir clr-build
 pushd clr-build
-cmake .. -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS:BOOL=ON -DLIB_INSTALL_DIR:PATH=%{_libdir} -DCMAKE_AR=/usr/bin/gcc-ar -DLIB_SUFFIX=64 -DCMAKE_RANLIB=/usr/bin/gcc-ranlib -DLIB_SUFFIX=64
+cmake .. -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS:BOOL=ON -DLIB_INSTALL_DIR:PATH=%{_libdir} -DCMAKE_AR=/usr/bin/gcc-ar -DLIB_SUFFIX=64 -DCMAKE_RANLIB=/usr/bin/gcc-ranlib
 make VERBOSE=1  %{?_smp_mflags}
 popd
 mkdir clr-build32
@@ -87,7 +109,7 @@ pushd clr-build32
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 export CFLAGS="$CFLAGS -m32"
 export CXXFLAGS="$CXXFLAGS -m32"
-cmake .. -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS:BOOL=ON -DLIB_INSTALL_DIR:PATH=%{_libdir}32 -DCMAKE_AR=/usr/bin/gcc-ar -DLIB_SUFFIX=32 -DCMAKE_RANLIB=/usr/bin/gcc-ranlib -DLIB_SUFFIX=64
+cmake .. -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS:BOOL=ON -DLIB_INSTALL_DIR:PATH=%{_libdir}32 -DCMAKE_AR=/usr/bin/gcc-ar -DLIB_SUFFIX=32 -DCMAKE_RANLIB=/usr/bin/gcc-ranlib
 make VERBOSE=1  %{?_smp_mflags}
 popd
 
@@ -133,7 +155,18 @@ popd
 /usr/lib64/libopenal.so
 /usr/lib64/pkgconfig/openal.pc
 
+%files dev32
+%defattr(-,root,root,-)
+/usr/lib32/libopenal.so
+/usr/lib32/pkgconfig/32openal.pc
+/usr/lib32/pkgconfig/openal.pc
+
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libopenal.so.1
 /usr/lib64/libopenal.so.1.17.2
+
+%files lib32
+%defattr(-,root,root,-)
+/usr/lib32/libopenal.so.1
+/usr/lib32/libopenal.so.1.17.2
