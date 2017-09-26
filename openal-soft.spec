@@ -4,7 +4,7 @@
 #
 Name     : openal-soft
 Version  : 1.18.2
-Release  : 18
+Release  : 19
 URL      : http://www.openal-soft.org/openal-releases/openal-soft-1.18.2.tar.bz2
 Source0  : http://www.openal-soft.org/openal-releases/openal-soft-1.18.2.tar.bz2
 Summary  : OpenAL is a cross-platform 3D audio API
@@ -102,7 +102,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1506452956
+export SOURCE_DATE_EPOCH=1506453065
 mkdir clr-build
 pushd clr-build
 cmake .. -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS:BOOL=ON -DLIB_INSTALL_DIR:PATH=/usr/lib64 -DCMAKE_AR=/usr/bin/gcc-ar -DLIB_SUFFIX=64 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_RANLIB=/usr/bin/gcc-ranlib
@@ -118,7 +118,7 @@ make VERBOSE=1  %{?_smp_mflags}
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1506452956
+export SOURCE_DATE_EPOCH=1506453065
 rm -rf %{buildroot}
 pushd clr-build32
 %make_install32
@@ -133,13 +133,14 @@ pushd clr-build
 %make_install
 popd
 ## make_install_append content
-mv %{buildroot}/usr/lib %{buildroot}/usr/lib32
+mkdir -p  %{buildroot}/usr/lib32
+mv %{buildroot}/usr/lib/*so* %{buildroot}/usr/lib32
 ## make_install_append end
 
 %files
 %defattr(-,root,root,-)
-/usr/lib32/lib/cmake/OpenAL/OpenALConfig-relwithdebinfo.cmake
-/usr/lib32/lib/cmake/OpenAL/OpenALConfig.cmake
+/usr/lib/cmake/OpenAL/OpenALConfig-relwithdebinfo.cmake
+/usr/lib/cmake/OpenAL/OpenALConfig.cmake
 /usr/lib64/cmake/OpenAL/OpenALConfig-relwithdebinfo.cmake
 /usr/lib64/cmake/OpenAL/OpenALConfig.cmake
 
@@ -176,6 +177,7 @@ mv %{buildroot}/usr/lib %{buildroot}/usr/lib32
 
 %files dev32
 %defattr(-,root,root,-)
+/usr/lib32/libopenal.so
 /usr/lib32/pkgconfig/32openal.pc
 /usr/lib32/pkgconfig/openal.pc
 
@@ -186,6 +188,5 @@ mv %{buildroot}/usr/lib %{buildroot}/usr/lib32
 
 %files lib32
 %defattr(-,root,root,-)
-/usr/lib32/lib/libopenal.so
-/usr/lib32/lib/libopenal.so.1
-/usr/lib32/lib/libopenal.so.1.18.2
+/usr/lib32/libopenal.so.1
+/usr/lib32/libopenal.so.1.18.2
