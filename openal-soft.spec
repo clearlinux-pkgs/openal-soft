@@ -122,7 +122,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1547683816
+export SOURCE_DATE_EPOCH=1547684017
 mkdir -p clr-build
 pushd clr-build
 %cmake ..
@@ -152,7 +152,7 @@ unset PKG_CONFIG_PATH
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1547683816
+export SOURCE_DATE_EPOCH=1547684017
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/openal-soft
 cp COPYING %{buildroot}/usr/share/package-licenses/openal-soft/COPYING
@@ -171,6 +171,9 @@ popd
 pushd clr-build
 %make_install
 popd
+## install_append content
+rm -rf %{buildroot}/usr/lib32/cmake
+## install_append end
 
 %files
 %defattr(-,root,root,-)
@@ -215,8 +218,6 @@ popd
 
 %files dev32
 %defattr(-,root,root,-)
-/usr/lib32/cmake/OpenAL/OpenALConfig-relwithdebinfo.cmake
-/usr/lib32/cmake/OpenAL/OpenALConfig.cmake
 /usr/lib32/libopenal.so
 /usr/lib32/pkgconfig/32openal.pc
 /usr/lib32/pkgconfig/openal.pc
