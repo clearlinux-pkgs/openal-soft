@@ -4,19 +4,20 @@
 #
 Name     : openal-soft
 Version  : 1.19.0
-Release  : 26
+Release  : 27
 URL      : http://www.openal-soft.org/openal-releases/openal-soft-1.19.0.tar.bz2
 Source0  : http://www.openal-soft.org/openal-releases/openal-soft-1.19.0.tar.bz2
 Summary  : OpenAL is a cross-platform 3D audio API
 Group    : Development/Tools
 License  : LGPL-2.0
-Requires: openal-soft-bin
-Requires: openal-soft-lib
-Requires: openal-soft-license
-Requires: openal-soft-data
+Requires: openal-soft-bin = %{version}-%{release}
+Requires: openal-soft-data = %{version}-%{release}
+Requires: openal-soft-lib = %{version}-%{release}
+Requires: openal-soft-license = %{version}-%{release}
 BuildRequires : alsa-lib-dev
 BuildRequires : alsa-lib-dev32
 BuildRequires : buildreq-cmake
+BuildRequires : extra-cmake-modules pkgconfig(libpulse)
 BuildRequires : gcc-dev32
 BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
@@ -39,8 +40,8 @@ OpenAL soft
 %package bin
 Summary: bin components for the openal-soft package.
 Group: Binaries
-Requires: openal-soft-data
-Requires: openal-soft-license
+Requires: openal-soft-data = %{version}-%{release}
+Requires: openal-soft-license = %{version}-%{release}
 
 %description bin
 bin components for the openal-soft package.
@@ -57,10 +58,10 @@ data components for the openal-soft package.
 %package dev
 Summary: dev components for the openal-soft package.
 Group: Development
-Requires: openal-soft-lib
-Requires: openal-soft-bin
-Requires: openal-soft-data
-Provides: openal-soft-devel
+Requires: openal-soft-lib = %{version}-%{release}
+Requires: openal-soft-bin = %{version}-%{release}
+Requires: openal-soft-data = %{version}-%{release}
+Provides: openal-soft-devel = %{version}-%{release}
 
 %description dev
 dev components for the openal-soft package.
@@ -69,10 +70,10 @@ dev components for the openal-soft package.
 %package dev32
 Summary: dev32 components for the openal-soft package.
 Group: Default
-Requires: openal-soft-lib32
-Requires: openal-soft-bin
-Requires: openal-soft-data
-Requires: openal-soft-dev
+Requires: openal-soft-lib32 = %{version}-%{release}
+Requires: openal-soft-bin = %{version}-%{release}
+Requires: openal-soft-data = %{version}-%{release}
+Requires: openal-soft-dev = %{version}-%{release}
 
 %description dev32
 dev32 components for the openal-soft package.
@@ -81,8 +82,8 @@ dev32 components for the openal-soft package.
 %package lib
 Summary: lib components for the openal-soft package.
 Group: Libraries
-Requires: openal-soft-data
-Requires: openal-soft-license
+Requires: openal-soft-data = %{version}-%{release}
+Requires: openal-soft-license = %{version}-%{release}
 
 %description lib
 lib components for the openal-soft package.
@@ -91,8 +92,8 @@ lib components for the openal-soft package.
 %package lib32
 Summary: lib32 components for the openal-soft package.
 Group: Default
-Requires: openal-soft-data
-Requires: openal-soft-license
+Requires: openal-soft-data = %{version}-%{release}
+Requires: openal-soft-license = %{version}-%{release}
 
 %description lib32
 lib32 components for the openal-soft package.
@@ -121,22 +122,13 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1536295449
-mkdir clr-build
+export SOURCE_DATE_EPOCH=1547683816
+mkdir -p clr-build
 pushd clr-build
 %cmake ..
-make  %{?_smp_mflags}
+make  %{?_smp_mflags} VERBOSE=1
 popd
-mkdir clr-build32
-pushd clr-build32
-export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
-export CFLAGS="$CFLAGS -m32"
-export CXXFLAGS="$CXXFLAGS -m32"
-%cmake -DLIB_INSTALL_DIR:PATH=/usr/lib32 -DLIB_SUFFIX=32 ..
-make  %{?_smp_mflags}
-unset PKG_CONFIG_PATH
-popd
-mkdir clr-build-avx2
+mkdir -p clr-build-avx2
 pushd clr-build-avx2
 export CFLAGS="$CFLAGS -O3 -march=haswell "
 export FCFLAGS="$CFLAGS -O3 -march=haswell "
@@ -145,14 +137,25 @@ export CXXFLAGS="$CXXFLAGS -O3 -march=haswell "
 export CFLAGS="$CFLAGS -march=haswell -m64"
 export CXXFLAGS="$CXXFLAGS -march=haswell -m64"
 %cmake ..
-make VERBOSE=1  %{?_smp_mflags}  || :
+make  %{?_smp_mflags} VERBOSE=1
+popd
+mkdir -p clr-build32
+pushd clr-build32
+export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
+export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32"
+export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32"
+export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32"
+%cmake -DLIB_INSTALL_DIR:PATH=/usr/lib32 -DCMAKE_INSTALL_LIBDIR=/usr/lib32 -DLIB_SUFFIX=32 ..
+make  %{?_smp_mflags} VERBOSE=1
+unset PKG_CONFIG_PATH
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1536295449
+export SOURCE_DATE_EPOCH=1547683816
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/openal-soft
-cp COPYING %{buildroot}/usr/share/doc/openal-soft/COPYING
+mkdir -p %{buildroot}/usr/share/package-licenses/openal-soft
+cp COPYING %{buildroot}/usr/share/package-licenses/openal-soft/COPYING
 pushd clr-build32
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -168,10 +171,6 @@ popd
 pushd clr-build
 %make_install
 popd
-## install_append content
-mkdir -p  %{buildroot}/usr/lib32
-mv %{buildroot}/usr/lib/*so* %{buildroot}/usr/lib32
-## install_append end
 
 %files
 %defattr(-,root,root,-)
@@ -208,8 +207,6 @@ mv %{buildroot}/usr/lib/*so* %{buildroot}/usr/lib32
 /usr/include/AL/efx-creative.h
 /usr/include/AL/efx-presets.h
 /usr/include/AL/efx.h
-/usr/lib/cmake/OpenAL/OpenALConfig-relwithdebinfo.cmake
-/usr/lib/cmake/OpenAL/OpenALConfig.cmake
 /usr/lib64/cmake/OpenAL/OpenALConfig-relwithdebinfo.cmake
 /usr/lib64/cmake/OpenAL/OpenALConfig.cmake
 /usr/lib64/haswell/libopenal.so
@@ -218,6 +215,8 @@ mv %{buildroot}/usr/lib/*so* %{buildroot}/usr/lib32
 
 %files dev32
 %defattr(-,root,root,-)
+/usr/lib32/cmake/OpenAL/OpenALConfig-relwithdebinfo.cmake
+/usr/lib32/cmake/OpenAL/OpenALConfig.cmake
 /usr/lib32/libopenal.so
 /usr/lib32/pkgconfig/32openal.pc
 /usr/lib32/pkgconfig/openal.pc
@@ -235,5 +234,5 @@ mv %{buildroot}/usr/lib/*so* %{buildroot}/usr/lib32
 /usr/lib32/libopenal.so.1.19.0
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/openal-soft/COPYING
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/openal-soft/COPYING
