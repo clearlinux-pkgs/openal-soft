@@ -4,7 +4,7 @@
 #
 Name     : openal-soft
 Version  : 1.19.1
-Release  : 29
+Release  : 30
 URL      : http://www.openal-soft.org/openal-releases/openal-soft-1.19.1.tar.bz2
 Source0  : http://www.openal-soft.org/openal-releases/openal-soft-1.19.1.tar.bz2
 Summary  : OpenAL is a cross-platform 3D audio API
@@ -25,6 +25,8 @@ BuildRequires : git
 BuildRequires : glibc-dev
 BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
+BuildRequires : mesa-dev
+BuildRequires : mesa-dev32
 BuildRequires : pkg-config
 BuildRequires : pkgconfig(32libpulse)
 BuildRequires : pkgconfig(libpulse)
@@ -110,42 +112,54 @@ license components for the openal-soft package.
 
 %prep
 %setup -q -n openal-soft-1.19.1
+cd %{_builddir}/openal-soft-1.19.1
 %patch1 -p1
 
 %build
+## build_prepend content
+export CFLAGS="$CFLAGS -fcommon"
+## build_prepend end
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1567533594
+export SOURCE_DATE_EPOCH=1601861616
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
-export FCFLAGS="$CFLAGS -fno-lto "
-export FFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$FFLAGS -fno-lto "
+export FFLAGS="$FFLAGS -fno-lto "
 export CXXFLAGS="$CXXFLAGS -fno-lto "
 %cmake ..
-make  %{?_smp_mflags} VERBOSE=1
+make  %{?_smp_mflags}
 popd
 mkdir -p clr-build-avx2
 pushd clr-build-avx2
+## build_prepend content
+export CFLAGS="$CFLAGS -fcommon"
+## build_prepend end
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -O3 -fno-lto -march=haswell "
-export FCFLAGS="$CFLAGS -O3 -fno-lto -march=haswell "
-export FFLAGS="$CFLAGS -O3 -fno-lto -march=haswell "
+export FCFLAGS="$FFLAGS -O3 -fno-lto -march=haswell "
+export FFLAGS="$FFLAGS -O3 -fno-lto -march=haswell "
 export CXXFLAGS="$CXXFLAGS -O3 -fno-lto -march=haswell "
 export CFLAGS="$CFLAGS -march=haswell -m64"
 export CXXFLAGS="$CXXFLAGS -march=haswell -m64"
+export FFLAGS="$FFLAGS -march=haswell -m64"
+export FCFLAGS="$FCFLAGS -march=haswell -m64"
 %cmake ..
-make  %{?_smp_mflags} VERBOSE=1
+make  %{?_smp_mflags}
 popd
 mkdir -p clr-build32
 pushd clr-build32
+## build_prepend content
+export CFLAGS="$CFLAGS -fcommon"
+## build_prepend end
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
-export FCFLAGS="$CFLAGS -fno-lto "
-export FFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$FFLAGS -fno-lto "
+export FFLAGS="$FFLAGS -fno-lto "
 export CXXFLAGS="$CXXFLAGS -fno-lto "
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
@@ -153,15 +167,15 @@ export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
 export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
 export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
 %cmake -DLIB_INSTALL_DIR:PATH=/usr/lib32 -DCMAKE_INSTALL_LIBDIR=/usr/lib32 -DLIB_SUFFIX=32 ..
-make  %{?_smp_mflags} VERBOSE=1
+make  %{?_smp_mflags}
 unset PKG_CONFIG_PATH
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1567533594
+export SOURCE_DATE_EPOCH=1601861616
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/openal-soft
-cp COPYING %{buildroot}/usr/share/package-licenses/openal-soft/COPYING
+cp %{_builddir}/openal-soft-1.19.1/COPYING %{buildroot}/usr/share/package-licenses/openal-soft/707b40a3e29fae6db61aa9620879f003fdda4ed2
 pushd clr-build32
 %make_install32
 if [ -d  %{buildroot}/usr/lib32/pkgconfig ]
@@ -242,4 +256,4 @@ rm -rf %{buildroot}/usr/lib32/cmake
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/openal-soft/COPYING
+/usr/share/package-licenses/openal-soft/707b40a3e29fae6db61aa9620879f003fdda4ed2

@@ -4,3 +4,5 @@ alsa-lib-dev32
 alsa-lib-dev
 pulseaudio-dev
 pulseaudio-dev32
+mesa-dev
+mesa-dev32
