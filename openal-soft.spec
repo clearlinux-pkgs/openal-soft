@@ -4,7 +4,7 @@
 #
 Name     : openal-soft
 Version  : 1.19.1
-Release  : 30
+Release  : 31
 URL      : http://www.openal-soft.org/openal-releases/openal-soft-1.19.1.tar.bz2
 Source0  : http://www.openal-soft.org/openal-releases/openal-soft-1.19.1.tar.bz2
 Summary  : OpenAL is a cross-platform 3D audio API
@@ -12,6 +12,7 @@ Group    : Development/Tools
 License  : LGPL-2.0
 Requires: openal-soft-bin = %{version}-%{release}
 Requires: openal-soft-data = %{version}-%{release}
+Requires: openal-soft-filemap = %{version}-%{release}
 Requires: openal-soft-lib = %{version}-%{release}
 Requires: openal-soft-license = %{version}-%{release}
 BuildRequires : alsa-lib-dev
@@ -44,6 +45,7 @@ Summary: bin components for the openal-soft package.
 Group: Binaries
 Requires: openal-soft-data = %{version}-%{release}
 Requires: openal-soft-license = %{version}-%{release}
+Requires: openal-soft-filemap = %{version}-%{release}
 
 %description bin
 bin components for the openal-soft package.
@@ -82,11 +84,20 @@ Requires: openal-soft-dev = %{version}-%{release}
 dev32 components for the openal-soft package.
 
 
+%package filemap
+Summary: filemap components for the openal-soft package.
+Group: Default
+
+%description filemap
+filemap components for the openal-soft package.
+
+
 %package lib
 Summary: lib components for the openal-soft package.
 Group: Libraries
 Requires: openal-soft-data = %{version}-%{release}
 Requires: openal-soft-license = %{version}-%{release}
+Requires: openal-soft-filemap = %{version}-%{release}
 
 %description lib
 lib components for the openal-soft package.
@@ -123,7 +134,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1601861616
+export SOURCE_DATE_EPOCH=1633810160
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -140,14 +151,14 @@ pushd clr-build-avx2
 export CFLAGS="$CFLAGS -fcommon"
 ## build_prepend end
 export GCC_IGNORE_WERROR=1
-export CFLAGS="$CFLAGS -O3 -fno-lto -march=haswell "
-export FCFLAGS="$FFLAGS -O3 -fno-lto -march=haswell "
-export FFLAGS="$FFLAGS -O3 -fno-lto -march=haswell "
-export CXXFLAGS="$CXXFLAGS -O3 -fno-lto -march=haswell "
-export CFLAGS="$CFLAGS -march=haswell -m64"
-export CXXFLAGS="$CXXFLAGS -march=haswell -m64"
-export FFLAGS="$FFLAGS -march=haswell -m64"
-export FCFLAGS="$FCFLAGS -march=haswell -m64"
+export CFLAGS="$CFLAGS -O3 -fno-lto -march=x86-64-v3 -mtune=skylake "
+export FCFLAGS="$FFLAGS -O3 -fno-lto -march=x86-64-v3 -mtune=skylake "
+export FFLAGS="$FFLAGS -O3 -fno-lto -march=x86-64-v3 -mtune=skylake "
+export CXXFLAGS="$CXXFLAGS -O3 -fno-lto -march=x86-64-v3 -mtune=skylake "
+export CFLAGS="$CFLAGS -march=x86-64-v3 -m64"
+export CXXFLAGS="$CXXFLAGS -march=x86-64-v3 -m64"
+export FFLAGS="$FFLAGS -march=x86-64-v3 -m64"
+export FCFLAGS="$FCFLAGS -march=x86-64-v3 -m64"
 %cmake ..
 make  %{?_smp_mflags}
 popd
@@ -161,7 +172,7 @@ export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
 export FFLAGS="$FFLAGS -fno-lto "
 export CXXFLAGS="$CXXFLAGS -fno-lto "
-export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
 export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
 export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
 export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
@@ -172,7 +183,7 @@ unset PKG_CONFIG_PATH
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1601861616
+export SOURCE_DATE_EPOCH=1633810160
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/openal-soft
 cp %{_builddir}/openal-soft-1.19.1/COPYING %{buildroot}/usr/share/package-licenses/openal-soft/707b40a3e29fae6db61aa9620879f003fdda4ed2
@@ -184,9 +195,16 @@ pushd %{buildroot}/usr/lib32/pkgconfig
 for i in *.pc ; do ln -s $i 32$i ; done
 popd
 fi
+if [ -d %{buildroot}/usr/share/pkgconfig ]
+then
+pushd %{buildroot}/usr/share/pkgconfig
+for i in *.pc ; do ln -s $i 32$i ; done
+popd
+fi
 popd
 pushd clr-build-avx2
-%make_install_avx2  || :
+%make_install_v3  || :
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 popd
 pushd clr-build
 %make_install
@@ -202,12 +220,9 @@ rm -rf %{buildroot}/usr/lib32/cmake
 %defattr(-,root,root,-)
 /usr/bin/alrecord
 /usr/bin/altonegen
-/usr/bin/haswell/alrecord
-/usr/bin/haswell/altonegen
-/usr/bin/haswell/makehrtf
-/usr/bin/haswell/openal-info
 /usr/bin/makehrtf
 /usr/bin/openal-info
+/usr/share/clear/optimized-elf/bin*
 
 %files data
 %defattr(-,root,root,-)
@@ -232,7 +247,6 @@ rm -rf %{buildroot}/usr/lib32/cmake
 /usr/include/AL/efx.h
 /usr/lib64/cmake/OpenAL/OpenALConfig-relwithdebinfo.cmake
 /usr/lib64/cmake/OpenAL/OpenALConfig.cmake
-/usr/lib64/haswell/libopenal.so
 /usr/lib64/libopenal.so
 /usr/lib64/pkgconfig/openal.pc
 
@@ -242,12 +256,15 @@ rm -rf %{buildroot}/usr/lib32/cmake
 /usr/lib32/pkgconfig/32openal.pc
 /usr/lib32/pkgconfig/openal.pc
 
+%files filemap
+%defattr(-,root,root,-)
+/usr/share/clear/filemap/filemap-openal-soft
+
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/haswell/libopenal.so.1
-/usr/lib64/haswell/libopenal.so.1.19.1
 /usr/lib64/libopenal.so.1
 /usr/lib64/libopenal.so.1.19.1
+/usr/share/clear/optimized-elf/lib*
 
 %files lib32
 %defattr(-,root,root,-)
