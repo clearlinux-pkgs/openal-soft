@@ -4,7 +4,7 @@
 #
 Name     : openal-soft
 Version  : 1.19.1
-Release  : 31
+Release  : 32
 URL      : http://www.openal-soft.org/openal-releases/openal-soft-1.19.1.tar.bz2
 Source0  : http://www.openal-soft.org/openal-releases/openal-soft-1.19.1.tar.bz2
 Summary  : OpenAL is a cross-platform 3D audio API
@@ -134,14 +134,17 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1633810160
+export SOURCE_DATE_EPOCH=1633812556
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
-export CFLAGS="$CFLAGS -fno-lto "
-export FCFLAGS="$FFLAGS -fno-lto "
-export FFLAGS="$FFLAGS -fno-lto "
-export CXXFLAGS="$CXXFLAGS -fno-lto "
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=auto "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=auto "
 %cmake ..
 make  %{?_smp_mflags}
 popd
@@ -151,10 +154,13 @@ pushd clr-build-avx2
 export CFLAGS="$CFLAGS -fcommon"
 ## build_prepend end
 export GCC_IGNORE_WERROR=1
-export CFLAGS="$CFLAGS -O3 -fno-lto -march=x86-64-v3 -mtune=skylake "
-export FCFLAGS="$FFLAGS -O3 -fno-lto -march=x86-64-v3 -mtune=skylake "
-export FFLAGS="$FFLAGS -O3 -fno-lto -march=x86-64-v3 -mtune=skylake "
-export CXXFLAGS="$CXXFLAGS -O3 -fno-lto -march=x86-64-v3 -mtune=skylake "
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=auto -march=x86-64-v3 -mtune=skylake "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto -march=x86-64-v3 -mtune=skylake "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto -march=x86-64-v3 -mtune=skylake "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=auto -march=x86-64-v3 -mtune=skylake "
 export CFLAGS="$CFLAGS -march=x86-64-v3 -m64"
 export CXXFLAGS="$CXXFLAGS -march=x86-64-v3 -m64"
 export FFLAGS="$FFLAGS -march=x86-64-v3 -m64"
@@ -168,10 +174,13 @@ pushd clr-build32
 export CFLAGS="$CFLAGS -fcommon"
 ## build_prepend end
 export GCC_IGNORE_WERROR=1
-export CFLAGS="$CFLAGS -fno-lto "
-export FCFLAGS="$FFLAGS -fno-lto "
-export FFLAGS="$FFLAGS -fno-lto "
-export CXXFLAGS="$CXXFLAGS -fno-lto "
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=auto "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=auto "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=auto "
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
 export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
 export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
@@ -183,7 +192,7 @@ unset PKG_CONFIG_PATH
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1633810160
+export SOURCE_DATE_EPOCH=1633812556
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/openal-soft
 cp %{_builddir}/openal-soft-1.19.1/COPYING %{buildroot}/usr/share/package-licenses/openal-soft/707b40a3e29fae6db61aa9620879f003fdda4ed2
