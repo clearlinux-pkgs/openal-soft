@@ -4,7 +4,7 @@
 #
 Name     : openal-soft
 Version  : 1.22.2
-Release  : 40
+Release  : 41
 URL      : https://www.openal-soft.org/openal-releases/openal-soft-1.22.2.tar.bz2
 Source0  : https://www.openal-soft.org/openal-releases/openal-soft-1.22.2.tar.bz2
 Summary  : OpenAL is a cross-platform 3D audio API
