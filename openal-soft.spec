@@ -5,7 +5,7 @@
 #
 Name     : openal-soft
 Version  : 1.23.1
-Release  : 48
+Release  : 49
 URL      : https://www.openal-soft.org/openal-releases/openal-soft-1.23.1.tar.bz2
 Source0  : https://www.openal-soft.org/openal-releases/openal-soft-1.23.1.tar.bz2
 Summary  : OpenAL is a cross-platform 3D audio API
@@ -13,7 +13,6 @@ Group    : Development/Tools
 License  : LGPL-2.0
 Requires: openal-soft-bin = %{version}-%{release}
 Requires: openal-soft-data = %{version}-%{release}
-Requires: openal-soft-filemap = %{version}-%{release}
 Requires: openal-soft-lib = %{version}-%{release}
 Requires: openal-soft-license = %{version}-%{release}
 BuildRequires : alsa-lib-dev
@@ -52,7 +51,6 @@ Summary: bin components for the openal-soft package.
 Group: Binaries
 Requires: openal-soft-data = %{version}-%{release}
 Requires: openal-soft-license = %{version}-%{release}
-Requires: openal-soft-filemap = %{version}-%{release}
 
 %description bin
 bin components for the openal-soft package.
@@ -91,20 +89,11 @@ Requires: openal-soft-dev = %{version}-%{release}
 dev32 components for the openal-soft package.
 
 
-%package filemap
-Summary: filemap components for the openal-soft package.
-Group: Default
-
-%description filemap
-filemap components for the openal-soft package.
-
-
 %package lib
 Summary: lib components for the openal-soft package.
 Group: Libraries
 Requires: openal-soft-data = %{version}-%{release}
 Requires: openal-soft-license = %{version}-%{release}
-Requires: openal-soft-filemap = %{version}-%{release}
 
 %description lib
 lib components for the openal-soft package.
@@ -140,17 +129,17 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1681312884
+export SOURCE_DATE_EPOCH=1683066003
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
-export FCFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
-export FFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
-export CXXFLAGS="$CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
+export CFLAGS="$CFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+export FCFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+export FFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+export CXXFLAGS="$CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 %cmake ..
 make  %{?_smp_mflags}
 popd
@@ -163,10 +152,10 @@ export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -Wl,-z,x86-64-v3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz -march=x86-64-v3 "
-export FCFLAGS="$FFLAGS -O3 -Wl,-z,x86-64-v3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz -march=x86-64-v3 "
-export FFLAGS="$FFLAGS -O3 -Wl,-z,x86-64-v3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz -march=x86-64-v3 "
-export CXXFLAGS="$CXXFLAGS -O3 -Wl,-z,x86-64-v3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz -march=x86-64-v3 "
+export CFLAGS="$CFLAGS -O3 -Wl,-z,x86-64-v3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd -march=x86-64-v3 "
+export FCFLAGS="$FFLAGS -O3 -Wl,-z,x86-64-v3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd -march=x86-64-v3 "
+export FFLAGS="$FFLAGS -O3 -Wl,-z,x86-64-v3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd -march=x86-64-v3 "
+export CXXFLAGS="$CXXFLAGS -O3 -Wl,-z,x86-64-v3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd -march=x86-64-v3 "
 export CFLAGS="$CFLAGS -march=x86-64-v3 -m64 -Wl,-z,x86-64-v3"
 export CXXFLAGS="$CXXFLAGS -march=x86-64-v3 -m64 -Wl,-z,x86-64-v3"
 export FFLAGS="$FFLAGS -march=x86-64-v3 -m64 -Wl,-z,x86-64-v3"
@@ -183,10 +172,10 @@ export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -Wl,-z,x86-64-v4 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz -march=x86_64-v4 -mprefer-vector-width=512 "
-export FCFLAGS="$FFLAGS -O3 -Wl,-z,x86-64-v4 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz -march=x86_64-v4 -mprefer-vector-width=512 "
-export FFLAGS="$FFLAGS -O3 -Wl,-z,x86-64-v4 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz -march=x86_64-v4 -mprefer-vector-width=512 "
-export CXXFLAGS="$CXXFLAGS -O3 -Wl,-z,x86-64-v4 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz -march=x86_64-v4 -mprefer-vector-width=512 "
+export CFLAGS="$CFLAGS -O3 -Wl,-z,x86-64-v4 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd -march=x86_64-v4 -mprefer-vector-width=512 "
+export FCFLAGS="$FFLAGS -O3 -Wl,-z,x86-64-v4 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd -march=x86_64-v4 -mprefer-vector-width=512 "
+export FFLAGS="$FFLAGS -O3 -Wl,-z,x86-64-v4 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd -march=x86_64-v4 -mprefer-vector-width=512 "
+export CXXFLAGS="$CXXFLAGS -O3 -Wl,-z,x86-64-v4 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd -march=x86_64-v4 -mprefer-vector-width=512 "
 export CFLAGS="$CFLAGS -march=x86-64-v4 -m64 -Wl,-z,x86-64-v4 -mprefer-vector-width=512"
 export CXXFLAGS="$CXXFLAGS -march=x86-64-v4 -m64 -Wl,-z,x86-64-v4 -mprefer-vector-width=512"
 export FFLAGS="$FFLAGS -march=x86-64-v4 -m64 -Wl,-z,x86-64-v4 -mprefer-vector-width=512"
@@ -203,10 +192,10 @@ export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
-export FCFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
-export FFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
-export CXXFLAGS="$CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz "
+export CFLAGS="$CFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+export FCFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+export FFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+export CXXFLAGS="$CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
 export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
 export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
@@ -218,7 +207,7 @@ unset PKG_CONFIG_PATH
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1681312884
+export SOURCE_DATE_EPOCH=1683066003
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/openal-soft
 cp %{_builddir}/openal-soft-%{version}/COPYING %{buildroot}/usr/share/package-licenses/openal-soft/707b40a3e29fae6db61aa9620879f003fdda4ed2 || :
@@ -257,10 +246,15 @@ rm -rf %{buildroot}/usr/lib32/cmake
 
 %files bin
 %defattr(-,root,root,-)
+/V3/usr/bin/alrecord
+/V3/usr/bin/altonegen
+/V3/usr/bin/openal-info
+/V4/usr/bin/alrecord
+/V4/usr/bin/altonegen
+/V4/usr/bin/openal-info
 /usr/bin/alrecord
 /usr/bin/altonegen
 /usr/bin/openal-info
-/usr/share/clear/optimized-elf/bin*
 
 %files data
 %defattr(-,root,root,-)
@@ -277,6 +271,8 @@ rm -rf %{buildroot}/usr/lib32/cmake
 
 %files dev
 %defattr(-,root,root,-)
+/V3/usr/lib64/libopenal.so
+/V4/usr/lib64/libopenal.so
 /usr/include/AL/al.h
 /usr/include/AL/alc.h
 /usr/include/AL/alext.h
@@ -286,8 +282,6 @@ rm -rf %{buildroot}/usr/lib32/cmake
 /usr/lib64/cmake/OpenAL/OpenALConfig.cmake
 /usr/lib64/cmake/OpenAL/OpenALTargets-relwithdebinfo.cmake
 /usr/lib64/cmake/OpenAL/OpenALTargets.cmake
-/usr/lib64/glibc-hwcaps/x86-64-v3/libopenal.so
-/usr/lib64/glibc-hwcaps/x86-64-v4/libopenal.so
 /usr/lib64/libopenal.so
 /usr/lib64/pkgconfig/openal.pc
 
@@ -297,16 +291,12 @@ rm -rf %{buildroot}/usr/lib32/cmake
 /usr/lib32/pkgconfig/32openal.pc
 /usr/lib32/pkgconfig/openal.pc
 
-%files filemap
-%defattr(-,root,root,-)
-/usr/share/clear/filemap/filemap-openal-soft
-
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/glibc-hwcaps/x86-64-v3/libopenal.so.1
-/usr/lib64/glibc-hwcaps/x86-64-v3/libopenal.so.1.23.1
-/usr/lib64/glibc-hwcaps/x86-64-v4/libopenal.so.1
-/usr/lib64/glibc-hwcaps/x86-64-v4/libopenal.so.1.23.1
+/V3/usr/lib64/libopenal.so.1
+/V3/usr/lib64/libopenal.so.1.23.1
+/V4/usr/lib64/libopenal.so.1
+/V4/usr/lib64/libopenal.so.1.23.1
 /usr/lib64/libopenal.so.1
 /usr/lib64/libopenal.so.1.23.1
 
