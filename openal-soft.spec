@@ -5,7 +5,7 @@
 #
 Name     : openal-soft
 Version  : 1.23.1
-Release  : 49
+Release  : 50
 URL      : https://www.openal-soft.org/openal-releases/openal-soft-1.23.1.tar.bz2
 Source0  : https://www.openal-soft.org/openal-releases/openal-soft-1.23.1.tar.bz2
 Summary  : OpenAL is a cross-platform 3D audio API
@@ -129,7 +129,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1683066003
+export SOURCE_DATE_EPOCH=1685586733
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -207,7 +207,7 @@ unset PKG_CONFIG_PATH
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1683066003
+export SOURCE_DATE_EPOCH=1685586733
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/openal-soft
 cp %{_builddir}/openal-soft-%{version}/COPYING %{buildroot}/usr/share/package-licenses/openal-soft/707b40a3e29fae6db61aa9620879f003fdda4ed2 || :
@@ -271,8 +271,6 @@ rm -rf %{buildroot}/usr/lib32/cmake
 
 %files dev
 %defattr(-,root,root,-)
-/V3/usr/lib64/libopenal.so
-/V4/usr/lib64/libopenal.so
 /usr/include/AL/al.h
 /usr/include/AL/alc.h
 /usr/include/AL/alext.h
@@ -293,9 +291,7 @@ rm -rf %{buildroot}/usr/lib32/cmake
 
 %files lib
 %defattr(-,root,root,-)
-/V3/usr/lib64/libopenal.so.1
 /V3/usr/lib64/libopenal.so.1.23.1
-/V4/usr/lib64/libopenal.so.1
 /V4/usr/lib64/libopenal.so.1.23.1
 /usr/lib64/libopenal.so.1
 /usr/lib64/libopenal.so.1.23.1
