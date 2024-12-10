@@ -6,13 +6,13 @@
 # autospec commit: 5424026
 #
 Name     : openal-soft
-Version  : 1.24.0
-Release  : 52
-URL      : https://www.openal-soft.org/openal-releases/openal-soft-1.24.0.tar.bz2
-Source0  : https://www.openal-soft.org/openal-releases/openal-soft-1.24.0.tar.bz2
+Version  : 1.24.1
+Release  : 53
+URL      : https://www.openal-soft.org/openal-releases/openal-soft-1.24.1.tar.bz2
+Source0  : https://www.openal-soft.org/openal-releases/openal-soft-1.24.1.tar.bz2
 Summary  : OpenAL is a cross-platform 3D audio API
 Group    : Development/Tools
-License  : LGPL-2.0
+License  : LGPL-2.0 MIT Python-2.0
 Requires: openal-soft-bin = %{version}-%{release}
 Requires: openal-soft-data = %{version}-%{release}
 Requires: openal-soft-lib = %{version}-%{release}
@@ -44,9 +44,9 @@ BuildRequires : zlib-dev
 %define debug_package %{nil}
 
 %description
-OpenAL Soft
-===========
-`master` branch CI status : [![GitHub Actions Status](https://github.com/kcat/openal-soft/actions/workflows/ci.yml/badge.svg)](https://github.com/kcat/openal-soft/actions) [![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/kcat/openal-soft?branch=master&svg=true)](https://ci.appveyor.com/api/projects/status/github/kcat/openal-soft?branch=master&svg=true)
+This directory contains build support files such as
+* CMake modules
+* Build scripts
 
 %package bin
 Summary: bin components for the openal-soft package.
@@ -120,16 +120,16 @@ license components for the openal-soft package.
 
 
 %prep
-%setup -q -n openal-soft-1.24.0
-cd %{_builddir}/openal-soft-1.24.0
+%setup -q -n openal-soft-1.24.1
+cd %{_builddir}/openal-soft-1.24.1
 pushd ..
-cp -a openal-soft-1.24.0 build32
+cp -a openal-soft-1.24.1 build32
 popd
 pushd ..
-cp -a openal-soft-1.24.0 buildavx2
+cp -a openal-soft-1.24.1 buildavx2
 popd
 pushd ..
-cp -a openal-soft-1.24.0 buildavx512
+cp -a openal-soft-1.24.1 buildavx512
 popd
 
 %build
@@ -140,7 +140,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1731946176
+export SOURCE_DATE_EPOCH=1733841894
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -278,10 +278,12 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1731946176
+export SOURCE_DATE_EPOCH=1733841894
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/openal-soft
 cp %{_builddir}/openal-soft-%{version}/COPYING %{buildroot}/usr/share/package-licenses/openal-soft/707b40a3e29fae6db61aa9620879f003fdda4ed2 || :
+cp %{_builddir}/openal-soft-%{version}/fmt-11.0.2/LICENSE %{buildroot}/usr/share/package-licenses/openal-soft/1606b4a09dd264124a044831841a83c68a2b9126 || :
+cp %{_builddir}/openal-soft-%{version}/fmt-11.0.2/doc/python-license.txt %{buildroot}/usr/share/package-licenses/openal-soft/f19fa3302647d3061306ffb9ef072a777c166e0b || :
 export GOAMD64=v2
 pushd ../build32/
 pushd clr-build32
@@ -378,16 +380,18 @@ rm -rf %{buildroot}/usr/lib32/cmake
 
 %files lib
 %defattr(-,root,root,-)
-/V3/usr/lib64/libopenal.so.1.24.0
-/V4/usr/lib64/libopenal.so.1.24.0
+/V3/usr/lib64/libopenal.so.1.24.1
+/V4/usr/lib64/libopenal.so.1.24.1
 /usr/lib64/libopenal.so.1
-/usr/lib64/libopenal.so.1.24.0
+/usr/lib64/libopenal.so.1.24.1
 
 %files lib32
 %defattr(-,root,root,-)
 /usr/lib32/libopenal.so.1
-/usr/lib32/libopenal.so.1.24.0
+/usr/lib32/libopenal.so.1.24.1
 
 %files license
 %defattr(0644,root,root,0755)
+/usr/share/package-licenses/openal-soft/1606b4a09dd264124a044831841a83c68a2b9126
 /usr/share/package-licenses/openal-soft/707b40a3e29fae6db61aa9620879f003fdda4ed2
+/usr/share/package-licenses/openal-soft/f19fa3302647d3061306ffb9ef072a777c166e0b
